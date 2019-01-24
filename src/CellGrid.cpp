@@ -125,12 +125,12 @@ void CellGrid::LoadCellsFromFile(const std::string& filename)
 
 void CellGrid::DrawGridLines(Renderer& renderer, unsigned int windowWidth, unsigned int windowHeight)
 {
-	for (unsigned int i = CellGrid::GetCellWidth() - 1; i < windowWidth; i += CellGrid::GetCellWidth())
+	for (unsigned int i = s_CellWidth - 1; i < windowWidth; i += s_CellWidth)
 	{
 		renderer.DrawLine(Colours::White, i, 0, i, windowWidth);
 	}
 
-	for (unsigned int i = CellGrid::GetCellWidth() - 1; i < windowHeight; i += CellGrid::GetCellWidth())
+	for (unsigned int i = s_CellWidth - 1; i < windowHeight; i += s_CellWidth)
 	{
 		renderer.DrawLine(Colours::White, 0, i, windowHeight, i);
 	}

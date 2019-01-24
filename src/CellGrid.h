@@ -18,7 +18,8 @@ private:
 	std::vector<std::vector<Cell>> m_cellGrid;
 
 public:
-	static constexpr unsigned int GetCellWidth() noexcept { return s_CellWidth; }
+	static constexpr unsigned int GetCellsPerRow() noexcept { return s_CellsPerRow; }
+	static constexpr unsigned int GetCellsPerColumn() noexcept { return s_CellsPerColumn; }
 
 	CellGrid();
 
