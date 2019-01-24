@@ -9,8 +9,8 @@
 class Game
 {
 private:
-	static constexpr unsigned int s_WindowWidth = 800 + CellGrid::GetCellsPerRow() - 1;
-	static constexpr unsigned int s_WindowHeight = 800 + CellGrid::GetCellsPerColumn() - 1;
+	static constexpr unsigned int s_WindowWidth = CellGrid::GetCellsPerRow() * CellGrid::GetCellWidth() - 1;
+	static constexpr unsigned int s_WindowHeight = CellGrid::GetCellsPerColumn() * CellGrid::GetCellWidth() - 1;
 
 	static constexpr unsigned int s_FrameRate = 5;
 

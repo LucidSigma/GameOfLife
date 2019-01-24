@@ -32,9 +32,9 @@ void CellGrid::IterateCells()
 	std::vector<std::pair<unsigned int, unsigned int>> newCells;
 	std::vector<std::pair<unsigned int, unsigned int>> deadCells;
 
-	for (unsigned int i = 0; i < m_cellGrid.size(); i++)
+	for (unsigned int i = 0; i < s_CellsPerColumn; i++)
 	{
-		for (unsigned int j = 0; j < m_cellGrid[i].size(); j++)
+		for (unsigned int j = 0; j < s_CellsPerRow; j++)
 		{
 			unsigned int neighbourCount = GetCellNeighbourCount(i, j);
 
