@@ -12,20 +12,22 @@ class CellGrid
 {
 private:
 	static constexpr unsigned int s_CellWidth = 20;
-	static constexpr unsigned int s_CellsPerRow = 40;
-	static constexpr unsigned int s_CellsPerColumn = 40;
+
+	unsigned int m_cellsPerRow = 0;
+	unsigned int m_cellsPerColumn = 0;
 
 	std::vector<std::vector<Cell>> m_cellGrid;
 
 public:
-	static constexpr unsigned int GetCellWidth() noexcept { return s_CellWidth; }
-	static constexpr unsigned int GetCellsPerRow() noexcept { return s_CellsPerRow; }
-	static constexpr unsigned int GetCellsPerColumn() noexcept { return s_CellsPerColumn; }
+	constexpr static unsigned int GetCellWidth() noexcept { return s_CellWidth; }
 
 	CellGrid();
 
 	void IterateCells();
 	void Draw(Renderer& renderer, unsigned int windowWidth, unsigned int windowHeight);
+
+	inline unsigned int GetCellsPerRow() noexcept { return m_cellsPerRow; }
+	inline unsigned int GetCellsPerColumn() noexcept { return m_cellsPerColumn; }
 
 private:
 	void LoadCellsFromFile(const std::string& filename);

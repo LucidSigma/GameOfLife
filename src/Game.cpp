@@ -34,9 +34,12 @@ bool Game::Initialise()
 		return false;
 	}
 
+	m_windowWidth = m_cellGrid.GetCellsPerRow() * CellGrid::GetCellWidth() - 1;
+	m_windowHeight = m_cellGrid.GetCellsPerColumn() * CellGrid::GetCellWidth() - 1;
+
 	try
 	{
-		SDL_Rect windowPosition { 100, 100, s_WindowWidth, s_WindowHeight };
+		SDL_Rect windowPosition { 100, 100, static_cast<int>(m_windowWidth), static_cast<int>(m_windowHeight) };
 
 		m_window = Window("Game of Life", windowPosition);
 		m_renderer = Renderer(m_window.GetPointer(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -105,7 +108,7 @@ void Game::Draw()
 {
 	m_renderer.Clear(Colours::Blue);
 
-	m_cellGrid.Draw(m_renderer, s_WindowWidth, s_WindowHeight);
+	m_cellGrid.Draw(m_renderer, m_windowWidth, m_windowHeight);
 
 	m_renderer.Draw();
 }

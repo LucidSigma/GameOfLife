@@ -1,5 +1,6 @@
 #include "CellGrid.h"
 
+#include <algorithm>
 #include <fstream>
 #include <stdexcept>
 #include <utility>
@@ -8,21 +9,6 @@
 
 CellGrid::CellGrid()
 {
-	m_cellGrid.reserve(s_CellsPerRow);
-
-	for (unsigned int i = 0; i < s_CellsPerRow; i++)
-	{
-		std::vector<Cell> currentRow;
-		currentRow.reserve(s_CellsPerColumn);
-
-		for (unsigned int j = 0; j < s_CellsPerColumn; j++)
-		{
-			currentRow.emplace_back(i, j);
-		}
-
-		m_cellGrid.push_back(currentRow);
-	}
-
 	static const std::string cellFilename = "Cells.txt";
 	LoadCellsFromFile(cellFilename);
 }
@@ -32,25 +18,24 @@ void CellGrid::IterateCells()
 	std::vector<std::pair<unsigned int, unsigned int>> newCells;
 	std::vector<std::pair<unsigned int, unsigned int>> deadCells;
 
-	for (unsigned int i = 0; i < s_CellsPerColumn; i++)
+	for (unsigned int i = 0; i < m_cellsPerColumn; i++)
 	{
-		for (unsigned int j = 0; j < s_CellsPerRow; j++)
+		for (unsigned int j = 0; j < m_cellsPerRow; j++)
 		{
 			unsigned int neighbourCount = GetCellNeighbourCount(i, j);
 
 			if (m_cellGrid[i][j].IsAlive())
 			{
-				static constexpr unsigned int PopulationMin = 2;
-				static constexpr unsigned int PopulationMax = 3;
-
-				if (neighbourCount < PopulationMin || neighbourCount > PopulationMax)
+				if (constexpr unsigned int PopulationMin = 2, PopulationMax = 3;
+					neighbourCount < PopulationMin || neighbourCount > PopulationMax)
 				{
 					deadCells.emplace_back(i, j);
 				}
 			}
 			else
 			{
-				if (constexpr unsigned int RebirthCount = 3; neighbourCount == RebirthCount)
+				if (constexpr unsigned int RebirthCount = 3;
+					neighbourCount == RebirthCount)
 				{
 					newCells.emplace_back(i, j);
 				}
@@ -81,8 +66,8 @@ void CellGrid::Draw(Renderer& renderer, unsigned int windowWidth, unsigned int w
 			{
 				SDL_Rect cellRect
 				{ 
-					static_cast<int>((s_CellWidth - 1) * i + i),
 					static_cast<int>((s_CellWidth - 1) * j + j),
+					static_cast<int>((s_CellWidth - 1) * i + i),
 					static_cast<int>((s_CellWidth - 1)),
 					static_cast<int>((s_CellWidth - 1))
 				};
@@ -108,31 +93,38 @@ void CellGrid::LoadCellsFromFile(const std::string& filename)
 	while (std::getline(cellFile, currentLine))
 	{
 		static constexpr char AliveCell = '*';
+		std::vector<Cell> currentRow;
 
 		for (unsigned int i = 0; i < currentLine.length(); i++)
 		{
+			currentRow.emplace_back(i, lineCounter);
+
 			if (currentLine[i] == AliveCell)
 			{
-				m_cellGrid[i][lineCounter].SetMortality(true);
+				currentRow.back().SetMortality(true);
 			}
 		}
 
+		m_cellGrid.push_back(currentRow);
 		lineCounter++;
 	}
 
 	cellFile.close();
+
+	m_cellsPerRow = m_cellGrid[0].size();
+	m_cellsPerColumn = lineCounter;
 }
 
 void CellGrid::DrawGridLines(Renderer& renderer, unsigned int windowWidth, unsigned int windowHeight)
 {
 	for (unsigned int i = s_CellWidth - 1; i < windowWidth; i += s_CellWidth)
 	{
-		renderer.DrawLine(Colours::White, i, 0, i, windowWidth);
+		renderer.DrawLine(Colours::White, i, 0, i, windowHeight);
 	}
 
 	for (unsigned int i = s_CellWidth - 1; i < windowHeight; i += s_CellWidth)
 	{
-		renderer.DrawLine(Colours::White, 0, i, windowHeight, i);
+		renderer.DrawLine(Colours::White, 0, i, windowWidth, i);
 	}
 }
 
@@ -144,12 +136,11 @@ unsigned int CellGrid::GetCellNeighbourCount(unsigned int x, unsigned int y) con
 	{
 		for (int j = y - 1; j <= static_cast<int>(y + 1); j++)
 		{
-			if ((i >= 0 && i < static_cast<int>(m_cellGrid.size())) && (j >= 0 && j < static_cast<int>(m_cellGrid.size())))
+			if (i >= 0 && i < static_cast<int>(m_cellGrid.size()) &&
+				j >= 0 && j < static_cast<int>(m_cellGrid[i].size()) &&
+				!(i == x && j == y) && m_cellGrid[i][j].IsAlive())
 			{
-				if (m_cellGrid[i][j].IsAlive() && !(i == x && j == y))
-				{
-					count++;
-				}
+				count++;
 			}
 		}
 	}
