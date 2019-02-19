@@ -4,7 +4,7 @@
 
 class NonCopyable
 {
-public:
+protected:
 	NonCopyable() = default;
 
 	NonCopyable(const NonCopyable&) = delete;
