@@ -18,7 +18,7 @@ private:
 	std::unique_ptr<SDL_Renderer, RendererDestroyer> m_renderer = nullptr;
 
 public:
-	explicit Renderer() noexcept;
+	Renderer() noexcept;
 	explicit Renderer(const Window& window, unsigned int flags, int index = -1);
 
 	Renderer(Renderer&& other) noexcept;
