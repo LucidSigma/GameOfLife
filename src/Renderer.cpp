@@ -1,13 +1,19 @@
 #include "Renderer.h"
 
 #include <stdexcept>
+#include <utility>
+
+void Renderer::RendererDestroyer::operator ()(SDL_Renderer* renderer) const noexcept
+{
+	SDL_DestroyRenderer(renderer);
+}
 
 Renderer::Renderer() noexcept
 	: m_renderer(nullptr)
 { }
 
-Renderer::Renderer(SDL_Window* window, unsigned int flags, int index)
-	: m_renderer(SDL_CreateRenderer(window, index, flags))
+Renderer::Renderer(const Window& window, unsigned int flags, int index)
+	: m_renderer(SDL_CreateRenderer(window.GetPointer(), index, flags))
 {
 	if (m_renderer == nullptr)
 	{
@@ -17,59 +23,54 @@ Renderer::Renderer(SDL_Window* window, unsigned int flags, int index)
 	}
 }
 
-Renderer::~Renderer() noexcept
+Renderer::Renderer(Renderer&& other) noexcept
+	: m_renderer(nullptr)
 {
-	SDL_DestroyRenderer(m_renderer);
+	std::swap(this->m_renderer, other.m_renderer);
 }
 
-Renderer::Renderer(Renderer&& other)
+Renderer& Renderer::operator =(Renderer&& other) noexcept
 {
-	if (m_renderer != nullptr)
-	{
-		SDL_DestroyRenderer(m_renderer);
-	}
-
-	this->m_renderer = other.m_renderer;
-	other.m_renderer = nullptr;
-}
-
-Renderer& Renderer::operator =(Renderer&& other)
-{
-	if (m_renderer != nullptr)
-	{
-		SDL_DestroyRenderer(m_renderer);
-	}
-
-	this->m_renderer = other.m_renderer;
-	other.m_renderer = nullptr;
+	this->m_renderer = nullptr;
+	std::swap(this->m_renderer, other.m_renderer);
 
 	return *this;
 }
 
+Renderer::~Renderer() noexcept
+{
+	Destroy();
+}
+
 void Renderer::Draw()
 {
-	SDL_RenderPresent(m_renderer);
+	SDL_RenderPresent(GetPointer());
 }
 
 void Renderer::DrawRectangle(const SDL_Rect& rect, SDL_Colour colour) noexcept
 {
 	ChangeColour(colour);
-	SDL_RenderFillRect(m_renderer, &rect);
+	SDL_RenderFillRect(GetPointer(), &rect);
 }
 
 void Renderer::DrawLine(SDL_Colour colour, int x1, int y1, int x2, int y2) noexcept
 {
 	ChangeColour(colour);
-	SDL_RenderDrawLine(m_renderer, x1, y1, x2, y2);
+	SDL_RenderDrawLine(GetPointer(), x1, y1, x2, y2);
 }
 
 void Renderer::Clear(SDL_Colour colour) noexcept
 {
 	ChangeColour(colour);
-	SDL_RenderClear(m_renderer);
+	SDL_RenderClear(GetPointer());
 }
 
 void Renderer::ChangeColour(SDL_Colour colour) noexcept
 {
-	SDL_SetRenderDrawColor(m_renderer, colour.r, colour.g, colour.b, colour.a);
+	SDL_SetRenderDrawColor(GetPointer(), colour.r, colour.g, colour.b, colour.a);
+}
+
+void Renderer::Destroy() noexcept
+{
+	m_renderer = nullptr;
 }

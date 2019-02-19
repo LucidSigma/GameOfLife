@@ -2,22 +2,27 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <SDL.h>
-
 #include "NonCopyable.h"
+
+#include "Window.h"
 
 class Renderer
 	: private NonCopyable
 {
 private:
-	SDL_Renderer* m_renderer = nullptr;
+	struct RendererDestroyer
+	{
+		void operator ()(SDL_Renderer* renderer) const noexcept;
+	};
+
+	std::unique_ptr<SDL_Renderer, RendererDestroyer> m_renderer = nullptr;
 
 public:
 	explicit Renderer() noexcept;
-	explicit Renderer(SDL_Window* window, unsigned int flags, int index = -1);
+	explicit Renderer(const Window& window, unsigned int flags, int index = -1);
 
-	Renderer(Renderer&& other);
-	Renderer& operator =(Renderer&& other);
+	Renderer(Renderer&& other) noexcept;
+	Renderer& operator =(Renderer&& other) noexcept;
 
 	~Renderer() noexcept;
 
@@ -27,10 +32,12 @@ public:
 
 	void Clear(SDL_Colour colour) noexcept;
 
-	inline SDL_Renderer* GetRenderer() const noexcept { return m_renderer; }
+	inline SDL_Renderer* GetPointer() const noexcept { return m_renderer.get(); }
 
 private:
 	void ChangeColour(SDL_Colour colour) noexcept;
+
+	void Destroy() noexcept;
 };
 
 #endif

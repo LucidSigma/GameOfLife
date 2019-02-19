@@ -39,10 +39,10 @@ bool Game::Initialise()
 
 	try
 	{
-		SDL_Rect windowPosition { 100, 100, static_cast<int>(m_windowWidth), static_cast<int>(m_windowHeight) };
+		SDL_Rect windowPosition { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, static_cast<int>(m_windowWidth), static_cast<int>(m_windowHeight) };
 
 		m_window = Window("Game of Life", windowPosition);
-		m_renderer = Renderer(m_window.GetPointer(), SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+		m_renderer = Renderer(m_window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 	}
 	catch (const std::runtime_error&)
 	{
