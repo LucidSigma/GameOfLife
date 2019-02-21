@@ -10,7 +10,7 @@
 #include <string>
 
 class Window
-	: private NonCopyable
+	: private INoncopyable
 {
 private:
 	struct WindowDestroyer
@@ -21,8 +21,8 @@ private:
 	std::unique_ptr<SDL_Window, WindowDestroyer> m_window = nullptr;
 
 public:
-	explicit Window() noexcept;
-	explicit Window(const std::string& title, const SDL_Rect& rect, unsigned int flags = SDL_WINDOW_SHOWN);
+	Window() noexcept;
+	Window(const std::string& title, const SDL_Rect& rect, unsigned int flags = SDL_WINDOW_SHOWN);
 
 	Window(Window&& other) noexcept;
 	Window& operator =(Window&& other) noexcept;

@@ -7,7 +7,7 @@
 #include "Window.h"
 
 class Renderer
-	: private NonCopyable
+	: private INoncopyable
 {
 private:
 	struct RendererDestroyer
@@ -19,23 +19,23 @@ private:
 
 public:
 	Renderer() noexcept;
-	explicit Renderer(const Window& window, unsigned int flags, int index = -1);
+	Renderer(const Window& window, unsigned int flags, int index = -1);
 
 	Renderer(Renderer&& other) noexcept;
 	Renderer& operator =(Renderer&& other) noexcept;
 
 	~Renderer() noexcept;
 
-	void Draw();
-	void DrawRectangle(const SDL_Rect& rect, SDL_Colour colour) noexcept;
-	void DrawLine(SDL_Colour colour, int x1, int y1, int x2, int y2) noexcept;
+	void Draw() const noexcept;
+	void DrawRectangle(const SDL_Rect& rect, SDL_Colour colour) const noexcept;
+	void DrawLine(SDL_Colour colour, int x1, int y1, int x2, int y2) const noexcept;
 
-	void Clear(SDL_Colour colour) noexcept;
+	void Clear(SDL_Colour colour) const noexcept;
 
 	inline SDL_Renderer* GetPointer() const noexcept { return m_renderer.get(); }
 
 private:
-	void ChangeColour(SDL_Colour colour) noexcept;
+	void ChangeColour(SDL_Colour colour) const noexcept;
 
 	void Destroy() noexcept;
 };

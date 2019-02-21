@@ -29,11 +29,11 @@ public:
 	void Play();
 
 private:
-	bool Initialise();
+	bool Initialise() noexcept;
 
-	void PollEvents();
-	void Update();
-	void Draw();
+	void PollEvents() noexcept;
+	void Update() noexcept;
+	void Draw() const noexcept;
 };
 
 #endif

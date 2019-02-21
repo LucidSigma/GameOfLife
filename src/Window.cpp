@@ -31,8 +31,7 @@ Window::Window(Window&& other) noexcept
 
 Window& Window::operator =(Window&& other) noexcept
 {
-	this->m_window = nullptr;
-	std::swap(this->m_window, other.m_window);
+	this->m_window = std::exchange(other.m_window, nullptr);
 
 	return *this;
 }

@@ -1,14 +1,15 @@
 #pragma once
-#ifndef NON_COPYABLE_H
-#define NON_COPYABLE_H
+#ifndef I_NONCOPYABLE_H
+#define I_NONCOPYABLE_H
 
-class NonCopyable
+class INoncopyable
 {
-protected:
-	NonCopyable() = default;
+public:
+	INoncopyable() = default;
+	~INoncopyable() = default;
 
-	NonCopyable(const NonCopyable&) = delete;
-	NonCopyable& operator =(const NonCopyable&) = delete;
+	INoncopyable(const INoncopyable&) = delete;
+	INoncopyable& operator =(const INoncopyable&) = delete;
 };
 
 #endif

@@ -25,7 +25,7 @@ void Game::Play()
 	}
 }
 
-bool Game::Initialise()
+bool Game::Initialise() noexcept
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
@@ -39,7 +39,13 @@ bool Game::Initialise()
 
 	try
 	{
-		SDL_Rect windowPosition { SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, static_cast<int>(m_windowWidth), static_cast<int>(m_windowHeight) };
+		SDL_Rect windowPosition
+		{ 
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			static_cast<int>(m_windowWidth),
+			static_cast<int>(m_windowHeight)
+		};
 
 		m_window = Window("Game of Life", windowPosition);
 		m_renderer = Renderer(m_window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -54,7 +60,7 @@ bool Game::Initialise()
 	return true;
 }
 
-void Game::PollEvents()
+void Game::PollEvents() noexcept
 {
 	SDL_Event gameEvent;
 
@@ -81,7 +87,7 @@ void Game::PollEvents()
 	}
 }
 
-void Game::Update()
+void Game::Update() noexcept
 {
 	static constexpr float MillisecondsPerSecond = 1000.0f;
 
@@ -104,11 +110,10 @@ void Game::Update()
 	m_cellGrid.IterateCells();
 }
 
-void Game::Draw()
+void Game::Draw() const noexcept
 {
 	m_renderer.Clear(Colours::Blue);
 
 	m_cellGrid.Draw(m_renderer, m_windowWidth, m_windowHeight);
-
 	m_renderer.Draw();
 }
