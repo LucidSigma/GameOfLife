@@ -41,6 +41,11 @@ Renderer::~Renderer() noexcept
 	Destroy();
 }
 
+void Renderer::Destroy() noexcept
+{
+	m_renderer = nullptr;
+}
+
 void Renderer::Draw() const noexcept
 {
 	SDL_RenderPresent(GetPointer());
@@ -67,9 +72,4 @@ void Renderer::Clear(SDL_Colour colour) const noexcept
 void Renderer::ChangeColour(SDL_Colour colour) const noexcept
 {
 	SDL_SetRenderDrawColor(GetPointer(), colour.r, colour.g, colour.b, colour.a);
-}
-
-void Renderer::Destroy() noexcept
-{
-	m_renderer = nullptr;
 }

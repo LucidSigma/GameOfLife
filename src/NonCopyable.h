@@ -4,7 +4,7 @@
 
 class INoncopyable
 {
-public:
+protected:
 	INoncopyable() = default;
 	~INoncopyable() = default;
 
