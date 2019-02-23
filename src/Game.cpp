@@ -89,23 +89,7 @@ void Game::PollEvents() noexcept
 
 void Game::Update() noexcept
 {
-	static constexpr float MillisecondsPerSecond = 1000.0f;
-
-	while (!SDL_TICKS_PASSED(SDL_GetTicks(), m_ticksCount + MillisecondsPerSecond / s_FrameRate))
-	{
-		#define pass
-		pass;
-	}
-
-	static constexpr float Epsilon = 0.05f;
-	float deltaTime = (SDL_GetTicks() - m_ticksCount) / MillisecondsPerSecond;
-
-	if (deltaTime > Epsilon)
-	{
-		deltaTime = Epsilon;
-	}
-
-	m_ticksCount = SDL_GetTicks();
+	RegulateFrameRate();
 
 	m_cellGrid.IterateCells();
 }
@@ -115,5 +99,19 @@ void Game::Draw() const noexcept
 	m_renderer.Clear(Colours::Blue);
 
 	m_cellGrid.Draw(m_renderer, m_windowWidth, m_windowHeight);
-	m_renderer.Draw();
+	m_renderer.Present();
+}
+
+void Game::RegulateFrameRate() noexcept
+{
+	static constexpr float MillisecondsPerSecond = 1000.0f;
+	static constexpr float MillisecondsPerFrame = MillisecondsPerSecond / s_FrameRate;
+
+	if (unsigned int deltaTicks = SDL_GetTicks() - m_ticksCount;
+		deltaTicks < MillisecondsPerFrame)
+	{
+		SDL_Delay(static_cast<Uint32>(MillisecondsPerFrame - deltaTicks));
+	}
+
+	m_ticksCount = SDL_GetTicks();
 }

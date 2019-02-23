@@ -28,7 +28,7 @@ public:
 
 	void Destroy() noexcept;
 
-	void Draw() const noexcept;
+	void Present() const noexcept;
 	void DrawRectangle(const SDL_Rect& rect, SDL_Colour colour) const noexcept;
 	void DrawLine(SDL_Colour colour, int x1, int y1, int x2, int y2) const noexcept;
 

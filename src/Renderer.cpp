@@ -46,7 +46,7 @@ void Renderer::Destroy() noexcept
 	m_renderer = nullptr;
 }
 
-void Renderer::Draw() const noexcept
+void Renderer::Present() const noexcept
 {
 	SDL_RenderPresent(GetPointer());
 }

@@ -34,6 +34,8 @@ private:
 	void PollEvents() noexcept;
 	void Update() noexcept;
 	void Draw() const noexcept;
+
+	void RegulateFrameRate() noexcept;
 };
 
 #endif
